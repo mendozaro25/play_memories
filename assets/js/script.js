@@ -145,7 +145,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Inicia el juego al hacer clic en el botón de "Comenzar"
-  botonInicio.addEventListener("click", iniciarJuego);
+  botonInicio.addEventListener("click", function () {
+    // Desbloquear audio en respuesta directa a la interacción
+    if (Howler && Howler.ctx && Howler.ctx.state === "suspended") {
+      Howler.ctx.resume().then(function () {
+        console.log("Audio context resumed from start button");
+        iniciarJuego(); // Inicia el juego solo después de desbloquear el audio
+      });
+    }
+  });  
 
   function iniciarJuego() {
     gsap.to(pantallaInicio, {
