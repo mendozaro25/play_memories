@@ -1,6 +1,15 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Desbloquear el contexto de audio en dispositivos móviles
+  document.addEventListener("touchstart", function () {
+    if (Howler && Howler.ctx && Howler.ctx.state === "suspended") {
+      Howler.ctx.resume().then(function () {
+        console.log("Audio context resumed");
+      });
+    }
+  }, { once: true });
+  
   // --- Fondo de "neuronas" animadas con GSAP ---
   var bgContainer = document.getElementById("background-animation");
   var neurons = []; // Array para almacenar las referencias a las neuronas
