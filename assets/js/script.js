@@ -1,6 +1,89 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
+  // --- Fondo de "neuronas" animadas con GSAP ---
+  var bgContainer = document.getElementById("background-animation");
+  var neurons = []; // Array para almacenar las referencias a las neuronas
+  var neuronCount = 30; // Puedes ajustar la cantidad de neuronas
+
+  // Crear las neuronas
+  for (let i = 0; i < neuronCount; i++) {
+    let neuron = document.createElement("div");
+    neuron.classList.add("neuron");
+    // Posición inicial aleatoria
+    neuron.style.left = Math.random() * window.innerWidth + "px";
+    neuron.style.top = Math.random() * window.innerHeight + "px";
+    bgContainer.appendChild(neuron);
+    neurons.push(neuron);
+
+    // Animación de movimiento continuo
+    animateNeuron(neuron);
+
+    // Animación de pulso (escala)
+    gsap.to(neuron, {
+      scale: 1.4,
+      duration: 1.5,
+      yoyo: true,
+      repeat: -1,
+      ease: "sine.inOut"
+    });
+  }
+
+  // Función para animar cada neurona hacia una nueva posición aleatoria
+  function animateNeuron(neuron) {
+    let newLeft = Math.random() * window.innerWidth;
+    let newTop = Math.random() * window.innerHeight;
+    let duration = 5 + Math.random() * 5; // Duración variable entre 5 y 10 segundos
+    gsap.to(neuron, {
+      duration: duration,
+      left: newLeft,
+      top: newTop,
+      ease: "sine.inOut",
+      onComplete: function () {
+        animateNeuron(neuron); // Al finalizar, se elige un nuevo destino
+      }
+    });
+  }
+
+  // Interactividad: efecto repulsivo cuando el mouse se acerca a las neuronas
+  document.addEventListener("mousemove", function (e) {
+    neurons.forEach(function (neuron) {
+      if (neuron.isReacting) return; // Evita múltiples animaciones simultáneas
+      let rect = neuron.getBoundingClientRect();
+      let centerX = rect.left + rect.width / 2;
+      let centerY = rect.top + rect.height / 2;
+      let dx = centerX - e.clientX;
+      let dy = centerY - e.clientY;
+      let distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 100) { // Si el mouse está cerca (menos de 100px)
+        neuron.isReacting = true;
+        let angle = Math.atan2(dy, dx);
+        let offset = 40; // Fuerza de repulsión
+        let offsetX = Math.cos(angle) * offset;
+        let offsetY = Math.sin(angle) * offset;
+        gsap.to(neuron, {
+          x: offsetX,
+          y: offsetY,
+          duration: 0.3,
+          ease: "power2.out",
+          overwrite: "auto",
+          onComplete: function () {
+            gsap.to(neuron, {
+              x: 0,
+              y: 0,
+              duration: 0.5,
+              ease: "power2.out",
+              overwrite: "auto",
+              onComplete: function () {
+                neuron.isReacting = false;
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
   // Lista de imágenes para el juego
   var imagenes = [
     "/assets/images/projects/avengers/capitanamerica.png",
@@ -26,35 +109,61 @@ document.addEventListener("DOMContentLoaded", function () {
   var urlMiSitio = "https://www.instagram.com/juanmendoza_25/";
 
   // Configuración de sonidos
-  var sonidoVoltear = new Howl({ src: ["/assets/sounds/flip2.mp3"], volume: 0.6 });
-  var sonidoGanar = new Howl({ src: ["./assets/sounds/wingame.mp3"], volume: 0.7 });
-  var sonidoPerder = new Howl({ src: ["./assets/sounds/losegame.mp3"], volume: 0.7 });
-  var sonidoCuentaAtras = new Howl({ src: ["/assets/sounds/reloj.mp3"], loop: true, volume: 0.3 });
+  var sonidoVoltear = new Howl({
+    src: ["/assets/sounds/flip2.mp3"],
+    volume: 0.6,
+  });
+  var sonidoGanar = new Howl({
+    src: ["./assets/sounds/wingame.mp3"],
+    volume: 0.7,
+  });
+  var sonidoPerder = new Howl({
+    src: ["./assets/sounds/losegame.mp3"],
+    volume: 0.7,
+  });
+  var sonidoCuentaAtras = new Howl({
+    src: ["/assets/sounds/reloj.mp3"],
+    loop: true,
+    volume: 0.3,
+  });
 
   // Inicia el juego al hacer clic en el botón de "Comenzar"
   botonInicio.addEventListener("click", iniciarJuego);
 
   function iniciarJuego() {
-    // Escondemos la pantalla de bienvenida
-    pantallaInicio.style.display = "none";
-
-    // Configuramos el contenedor del juego
-    contenedorJuego.className = "";
-    contenedorJuego.classList.add(
-      "game-container",
-      "grid",
-      "grid-cols-4",
-      "gap-4",
-      "p-6",
-      "bg-gray-800",
-      "rounded-lg",
-      "shadow-lg",
-      "max-w-xl",
-      "w-full"
-    );
-
-    reiniciarJuego();
-    crearTablero();
+    gsap.to(pantallaInicio, {
+      duration: 0.5,
+      opacity: 0,
+      scale: 0.8,
+      ease: "power2.inOut",
+      onComplete: function () {
+        pantallaInicio.style.display = "none";
+        // Configuramos el contenedor del juego
+        contenedorJuego.className = "";
+        contenedorJuego.classList.add(
+          "game-container",
+          "grid",
+          "grid-cols-4",
+          "gap-4",
+          "p-6",
+          "bg-gray-800",
+          "rounded-lg",
+          "shadow-lg",
+          "max-w-xl",
+          "w-full"
+        );
+        // Aseguramos que el contenedor sea visible y animamos su aparición
+        contenedorJuego.style.display = "grid";
+        gsap.from(contenedorJuego, {
+          duration: 0.5,
+          opacity: 0,
+          scale: 0.8,
+          ease: "power2.out",
+        });
+        reiniciarJuego();
+        crearTablero();
+      },
+    });
   }
 
   function reiniciarJuego() {
@@ -116,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function comprobarPareja() {
     var primera = cartasAbiertas[0],
-        segunda = cartasAbiertas[1];
+      segunda = cartasAbiertas[1];
 
     if (primera.imagen === segunda.imagen) {
       parejasEncontradas++;
@@ -207,7 +316,8 @@ document.addEventListener("DOMContentLoaded", function () {
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: function () {
-        var contenedorModalQR = Swal.getHtmlContainer().querySelector("#qr-code-container");
+        var contenedorModalQR =
+          Swal.getHtmlContainer().querySelector("#qr-code-container");
         contenedorModalQR.appendChild(contenedorQR);
 
         var btnReiniciar = Swal.getHtmlContainer().querySelector("#reiniciar");
@@ -229,4 +339,11 @@ document.addEventListener("DOMContentLoaded", function () {
       arr[j] = temp;
     }
   }
+
+  // Animar la entrada del splash screen
+  gsap.from(pantallaInicio, {
+    duration: 1,
+    opacity: 0,
+    ease: "power.inOut",
+  });
 });

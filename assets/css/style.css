@@ -10,6 +10,28 @@ body {
   position: relative;
 }
 
+/* Contenedor para la animación de fondo */
+#background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Detrás de todo el contenido */
+  overflow: hidden;
+}
+
+/* Estilo para las neuronas */
+.neuron {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: radial-gradient(circle, #ffffff, #052850);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  will-change: transform, left, top;
+}
+
 /* ================================
    Pantalla de Inicio (Splash Screen)
 ================================ */
@@ -188,6 +210,10 @@ button#reiniciar {
 
 button#reiniciar:hover {
   background-color: #262e39;
+}
+
+section#splash-screen {
+  background-color: #1f2937e8;
 }
 
 /* ================================
