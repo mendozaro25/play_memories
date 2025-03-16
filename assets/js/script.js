@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }, { once: true });
-  
+
   // --- Fondo de "neuronas" animadas con GSAP ---
   var bgContainer = document.getElementById("background-animation");
   var neurons = []; // Array para almacenar las referencias a las neuronas
@@ -152,7 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
         contenedorJuego.classList.add(
           "game-container",
           "grid",
-          "grid-cols-4",
+          "grid-cols-3",    // 3 columnas por defecto (móviles)
+          "md:grid-cols-4", // 4 columnas en pantallas medianas en adelante
           "gap-4",
           "p-6",
           "bg-gray-800",
