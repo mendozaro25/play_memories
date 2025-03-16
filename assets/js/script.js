@@ -1,14 +1,21 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Desbloquear el contexto de audio en dispositivos móviles
-  document.addEventListener("touchstart", function () {
+  // Función para desbloquear el contexto de audio
+  function unlockAudio() {
     if (Howler && Howler.ctx && Howler.ctx.state === "suspended") {
       Howler.ctx.resume().then(function () {
         console.log("Audio context resumed");
       });
     }
-  }, { once: true });
+    // Elimina estos listeners para que se ejecute solo una vez
+    document.removeEventListener("touchstart", unlockAudio);
+    document.removeEventListener("click", unlockAudio);
+  }
+
+  // Agrega listeners para eventos de toque y click
+  document.addEventListener("touchstart", unlockAudio, false);
+  document.addEventListener("click", unlockAudio, false);
 
   // --- Fondo de "neuronas" animadas con GSAP ---
   var bgContainer = document.getElementById("background-animation");
@@ -34,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
       duration: 1.5,
       yoyo: true,
       repeat: -1,
-      ease: "sine.inOut"
+      ease: "sine.inOut",
     });
   }
 
@@ -50,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ease: "sine.inOut",
       onComplete: function () {
         animateNeuron(neuron); // Al finalizar, se elige un nuevo destino
-      }
+      },
     });
   }
 
@@ -64,7 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
       let dx = centerX - e.clientX;
       let dy = centerY - e.clientY;
       let distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < 100) { // Si el mouse está cerca (menos de 100px)
+      if (distance < 100) {
+        // Si el mouse está cerca (menos de 100px)
         neuron.isReacting = true;
         let angle = Math.atan2(dy, dx);
         let offset = 40; // Fuerza de repulsión
@@ -85,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
               overwrite: "auto",
               onComplete: function () {
                 neuron.isReacting = false;
-              }
+              },
             });
-          }
+          },
         });
       }
     });
@@ -152,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
         contenedorJuego.classList.add(
           "game-container",
           "grid",
-          "grid-cols-3",    // 3 columnas por defecto (móviles)
+          "grid-cols-3", // 3 columnas por defecto (móviles)
           "md:grid-cols-4", // 4 columnas en pantallas medianas en adelante
           "gap-4",
           "p-6",
