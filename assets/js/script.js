@@ -1,3 +1,5 @@
+"use strict";
+
 document.addEventListener("DOMContentLoaded", function () {
   // Lista de imágenes para el juego
   var imagenes = [
