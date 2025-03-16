@@ -128,62 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
     volume: 0.3,
   });
 
-  // Función para manejar el inicio del juego y asegurar el audio
-  botonInicio.addEventListener("click", async function () {
-    try {
-      // Intentar desbloquear el audio
-      await desbloquearAudio();
-
-      // Iniciar el juego solo después de asegurar que el audio está listo
-      iniciarJuego();
-    } catch (error) {
-      console.error("Error al desbloquear el audio:", error);
-      alert(
-        "No se pudo iniciar el audio. Por favor, asegúrate de permitir el acceso al audio en tu dispositivo y vuelve a intentarlo."
-      );
-    }
-  });
-
-  // Función para desbloquear el audio
-  async function desbloquearAudio() {
-    // Verificar si Howler.js está disponible
-    if (!Howler || !Howler.ctx) {
-      throw new Error("Howler.js no está configurado correctamente.");
-    }
-
-    // Verificar el estado del contexto de audio
-    const audioContext = Howler.ctx;
-
-    // Si el contexto está suspendido, intentar reanudarlo
-    if (audioContext.state === "suspended") {
-      console.log(
-        "El contexto de audio está suspendido. Intentando reanudarlo..."
-      );
-      await audioContext.resume();
-      console.log("Audio context reanudado.");
-    }
-
-    // Verificar si el navegador requiere permisos explícitos para el audio
-    if (typeof navigator.permissions !== "undefined") {
-      const permissionStatus = await navigator.permissions.query({
-        name: "microphone",
-      });
-      if (permissionStatus.state === "denied") {
-        throw new Error(
-          "El acceso al audio está denegado. Por favor, habilita los permisos en la configuración del navegador."
-        );
-      }
-    }
-
-    // Probar la reproducción de un sonido silencioso para forzar la activación del audio
-    const unlockSound = new Audio("data:audio/mp3;base64,//sQxAADdAAAAAB...");
-    unlockSound.muted = false;
-    unlockSound.play().catch((err) => {
-      console.warn("Error al reproducir sonido de prueba:", err);
-    });
-
-    console.log("Audio desbloqueado exitosamente.");
-  }
+  // Inicia el juego al hacer clic en el botón de "Comenzar"
+  botonInicio.addEventListener("click", iniciarJuego);
 
   function iniciarJuego() {
     gsap.to(pantallaInicio, {
