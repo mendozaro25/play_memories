@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Variables de estado
   var cartasAbiertas = [];
   var parejasEncontradas = 0;
-  var tiempoRestante = 20;
+  var tiempoRestante = 15;
   var intervaloTiempo;
 
   // URL de mi sitio (cámbiala según convenga)
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sonidoCuentaAtras.stop();
     cartasAbiertas = [];
     parejasEncontradas = 0;
-    tiempoRestante = 20;
+    tiempoRestante = 15;
     actualizarTemporizador();
   }
 
@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
         primera.carta.classList.remove("flipped");
         segunda.carta.classList.remove("flipped");
         cartasAbiertas = [];
-      }, 350);
+      }, 330);
     }
   }
 
