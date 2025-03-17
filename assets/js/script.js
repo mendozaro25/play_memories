@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
         primera.carta.classList.remove("flipped");
         segunda.carta.classList.remove("flipped");
         cartasAbiertas = [];
-      }, 1000);
+      }, 350);
     }
   }
 
