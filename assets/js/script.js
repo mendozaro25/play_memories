@@ -1,6 +1,9 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Variables globales
+  let playerName = localStorage.getItem("playerName");
+
   // --- Fondo de "neuronas" animadas con GSAP ---
   var bgContainer = document.getElementById("background-animation");
   var neurons = []; // Array para almacenar las referencias a las neuronas
@@ -132,6 +135,12 @@ document.addEventListener("DOMContentLoaded", function () {
   botonInicio.addEventListener("click", iniciarJuego);
 
   function iniciarJuego() {
+    // Obtener el nombre del jugador
+    const nameInput = document.getElementById("player-name");
+    playerName = nameInput.value;
+    // Guardar el nombre del jugador en localStorage
+    localStorage.setItem("playerName", playerName);
+    // Configurar el contenedor del juego
     gsap.to(pantallaInicio, {
       duration: 0.5,
       opacity: 0,
@@ -300,20 +309,17 @@ document.addEventListener("DOMContentLoaded", function () {
       height: 150,
     });
 
-    var mensaje = ganado
-      ? "¡Felicidades! Has ganado el juego."
-      : "Se acabó el tiempo. Inténtalo de nuevo.";
-    var mensajeExtra = "Escanea el código QR y sígueme en Instagram.";
-
+    var mensaje =
+      "Escanea el código QR para seguirme en Instagram. Comparte el juego con tus amigos y familiares.";
     Swal.fire({
-      title: ganado ? "¡Ganaste!" : "Perdiste :(",
+      title: ganado
+        ? `¡Felicidades, <br> ${playerName}! 🥳`
+        : `Has perdido, <br> ${playerName} 😔`,
       html:
-        "<p>" +
+        "<p class='text-lg mb-3'>" +
         mensaje +
-        "</p><p>" +
-        mensajeExtra +
         "</p><div id='qr-code-container'></div>" +
-        "<button id='reiniciar' class='swal2-confirm swal2-styled' style='display:block; margin:10px auto;'>Jugar de nuevo</button>",
+        "<button id='reiniciar' class='mt-4 px-6 py-3 bg-blue-500 hover:bg-blue-700 transition-colors rounded-lg text-white font-semibold shadow-md focus:outline-none'>Jugar de nuevo</button>",
       showConfirmButton: false,
       allowOutsideClick: false,
       allowEscapeKey: false,
@@ -321,6 +327,23 @@ document.addEventListener("DOMContentLoaded", function () {
         var contenedorModalQR =
           Swal.getHtmlContainer().querySelector("#qr-code-container");
         contenedorModalQR.appendChild(contenedorQR);
+        contenedorQR.style.margin = "auto";
+        contenedorQR.style.display = "block";
+        contenedorQR.style.marginLeft = "auto";
+        contenedorQR.style.marginRight = "auto";
+        contenedorQR.style.backgroundColor = "#fff";
+        contenedorQR.style.borderRadius = "10px";
+        contenedorQR.style.cursor = "pointer";
+        contenedorQR.style.transition = "all 0.5s ease-in-out";
+        contenedorQR.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+        contenedorQR.style.padding = "10px";
+        contenedorQR.style.width = "150px";
+        contenedorQR.style.height = "150px";
+        contenedorQR.style.border = "none";
+        contenedorQR.style.outline = "none";
+        contenedorQR.addEventListener("click", function () {
+          window.open(urlMiSitio, "_blank");
+        });
 
         var btnReiniciar = Swal.getHtmlContainer().querySelector("#reiniciar");
         btnReiniciar.addEventListener("click", function () {
