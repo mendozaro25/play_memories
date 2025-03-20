@@ -189,7 +189,7 @@ div:where(.swal2-container) h2:where(.swal2-title) {
 }
 
 div#qr-code-container {
-  margin: 2em 0;
+  margin: 1em 0;
 }
 
 h2#swal2-title {
