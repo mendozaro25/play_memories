@@ -217,7 +217,7 @@ section#splash-screen {
 }
 
 .input-nombre {
-  background-color: #1f2937;
+  background-color: #374151;
   color: #fff;
   font-weight: 700;
   font-size: 16px;
@@ -231,7 +231,7 @@ section#splash-screen {
 
 .input-nombre:focus {
   outline: none;
-  background-color: #374151;
+  background-color: #475161;
 }
 
 /* ================================
